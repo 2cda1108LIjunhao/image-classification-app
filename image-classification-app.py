@@ -7,6 +7,7 @@ from tensorflow.keras.preprocessing import image
 from tensorflow.keras.applications import ResNet50
 from tensorflow.keras.applications.resnet50 import preprocess_input, decode_predictions
 import numpy as np
+import subprocess 
 
 # 加载预训练的 ResNet50 模型
 model = ResNet50(weights='imagenet')
@@ -64,7 +65,12 @@ def create_app():
     def open_folder():
         folder_path = os.path.abspath('classified_images')
         if os.path.exists(folder_path):
-            os.startfile(folder_path)
+            # 判断操作系统并打开文件夹
+            if os.name == 'nt':  # Windows
+                os.startfile(folder_path)
+            elif os.name == 'posix':  # macOS 或 Linux
+                subprocess.run(["open", folder_path])  # macOS
+                
         else:
             messagebox.showwarning("No Folder Found", "No classified images found. Please classify images first.")
 
